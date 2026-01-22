@@ -88,6 +88,23 @@ async function initFeeds() {
     dremioContainer.innerHTML = ''; // Clear skeleton
     if (dremioItems.length > 0) {
         dremioItems.slice(0, 5).forEach(item => {
+            // Append UTM parameters to the link
+            try {
+                const url = new URL(item.link);
+                url.searchParams.append("utm_source", "ev_podcast");
+                url.searchParams.append("utm_medium", "influencer");
+                url.searchParams.append("utm_campaign", "next-gen-dremio");
+                url.searchParams.append("utm_term", "get-started-dla-podcast-01-21-2026");
+                url.searchParams.append("utm_content", "alexmerced");
+                item.link = url.toString();
+            } catch (e) {
+                // Fallback for simple string if URL parsing fails (unlikely)
+                if (item.link.indexOf('?') === -1) {
+                    item.link += '?utm_source=ev_podcast&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=get-started-dla-podcast-01-21-2026&utm_content=alexmerced';
+                } else {
+                    item.link += '&utm_source=ev_podcast&utm_medium=influencer&utm_campaign=next-gen-dremio&utm_term=get-started-dla-podcast-01-21-2026&utm_content=alexmerced';
+                }
+            }
             dremioContainer.appendChild(createCard(item, 'dremio-pattern'));
         });
     } else {
